@@ -128,7 +128,7 @@ def resource_path(relative_path):
   return os.path.join(os.path.abspath('.'), relative_path)
 
 # Использование функции для загрузки изображения
-image = PhotoImage(resource_path("img/image.png"))
+image = PhotoImage(file = resource_path("img/image.png"))
 ```
 Далее в консоле пишем:
 ```bash
