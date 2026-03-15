@@ -51,21 +51,21 @@ python -m pyinstaller --onefile main.py
 ```bash
 python -m PyInstaller --onefile main.py
 # ИЛИ
-pyinstaller --onefile main.py
+PyInstaller --onefile main.py
 ```
 **Пример**
 ```bash
 #Простая сборка
-pyinstaller project.py
+PyInstaller project.py
 
 # Один файл с иконкой и данными
-pyinstaller --onefile --icon "img/icon.ico" --add-data "img;img" project.py
+PyInstaller --onefile --icon "img/icon.ico" --add-data "img;img" project.py
 
 # Без консоли (для оконных приложений)
-pyinstaller --onefile --windowed --name "Имя_Проекта" project.py
+PyInstaller --onefile --windowed --name "Имя_Проекта" project.py
 
 # Полная сборка с оптимизацией
-pyinstaller --onefile --clean --upx-dir "C:\upx" --add-data "img;img" --name "Имя_Проекта" project.py
+PyInstaller --onefile --clean --upx-dir "C:\upx" --add-data "img;img" --name "Имя_Проекта" project.py
 ```
 
 
@@ -75,29 +75,87 @@ pyinstaller --onefile --clean --upx-dir "C:\upx" --add-data "img;img" --name "И
 
 ## Решение
 Изначально я подумал, что это невозможно, потому что если подумать по логике, изображение должны храниться в папке с изображениями. Но все такий попытался найти решение, я покажу 2 решения.
+```
+project/
+|
+├── main.py          # Основной файл
+└── img/             # Папка с изображениями
+     └── image.png   # Изображение
+```
+Написал небольшой код в `main.py` с библеотекой `tkinter`, который показывает только изображение
+```python
+import tkinter as tk
+from tkinter import PhotoImage
+
+parent = tk.Tk()
+
+image = PhotoImage(file="./img/image.png") # Путь к изображению
+
+image_label = tk.Label(parent, image=image)
+image_label.pack()
+
+parent.mainloop()
+```
 
 ### Способ 1. Изображение не хводит в EXE.
-Самый простой способ преобразование  *.py* в *.exe*. Сначала, нужно скачать библеотеку PyInstaller, в терменале/CMD пишем:
+Самый простой способ преобразование  *.py* в *.exe*. Можете найти в пунке `Пример работы с PyInstaller > Пример`.
 ```bash
-pip install pyinstaller
+PyInstaller --onefile --add-data "img;img" --name Test main.py
 ```
-После того как скачатается, пишем следующее:
-```bash
-PyInstaller --onefile --console main.py
-```
-После того как вы прописали эту команду, пойдет процесс преобразование с *.py* в *.exe*. В папке появится 2 папки (build, dist) и 1 файл(main.spec). Для того
-чтобы найти EXE-файл, находится в папке *dist*, там вы найдет тот самый проект, который вы преобразовали
-
+После того как вы прописали эту команду, пойдет процесс преобразование с *.py* в *.exe*. В папке появится 2 папки (build, dist) и 1 файл(Test.spec). Для того
+чтобы найти EXE-файл, находится в папке *dist*, там вы найдет тот самый проект, который вы преобразовали. <br>
+**Важно!** При таком способе изображения **НЕ попадают** внутрь EXE-файла. После сборки нужно вручную скопировать папку с изображениями в папку `dist`.
 
 ### Способо 2
-
+2 способ, тоже самое, что и с 1. Только, будем работать с `.spec` и добавим функцию|скрипт. Для начала, добавим функцию|скрипт в `main.py`
 ```python
-# Translate asset paths to useable format for PyInstaller
+import os, sys
+
+# Функция для доступа к файлам (картинки, звуки, базы данных)
+# Когда программа скомпилирована в .exe через PyInstaller,
+# все файлы распаковываются во временную папку (sys._MEIPASS)
+# Эта функция автоматически выбирает правильный путь:
+# - При разработке (.py) -> файлы в папке с программой
+# - В готовом .exe -> файлы во временной папке PyInstaller
+# ВАЖНО: Для работы этой функции нужно в .spec файле указать:
+# datas=[('папка_с_файлами', 'папка_назначения')]
+# Пример: datas=[('images', 'images'), ('data', 'data')]
+
 def resource_path(relative_path):
   if hasattr(sys, '_MEIPASS'):
       return os.path.join(sys._MEIPASS, relative_path)
   return os.path.join(os.path.abspath('.'), relative_path)
 ```
 
+Далее в консоле пишем
+```bash
+PyInstaller --onefile main.py
+```
+
+Или можете написать
+```bash
+PyInstaller --onefile --icon "img/icon.ico" --name "Test" project.py
+```
+
+Затем в `main.spec`, если вы в консоле писали `--name "Test"`, то будет `Test.spec`
+```spec
+a = Analysis(
+    ['main.py'],
+    pathex=['C:\\Users\\Admin\\Desktop\\project\\test_exe'], # Указываем путь к проекту
+    ...
+)
+
+a.datas += [('./img/image.png', './img/image.png', 'DATA')] # Указываем путь к изображению
+...
+```
+
+После этого надо удалить 2 папки (build, dist). И написать в терменале
+```bash
+PyInstaller main.spec
+```
+После этого, также появится 2 папки (build, dist), EXE-файл тамже находится
 
 ## Источники
+- [CyberForum.ru - Как "положить" изображения в EXE файл созданный с PyInstaller?](https://www.cyberforum.ru/python/thread2468049-page2.html)
+- [Stack Overflow - Add image to .spec file in Pyinstaller](https://stackoverflow.com/questions/9946760/add-image-to-spec-file-in-pyinstaller)
+- [Stack Overflow - Bundling data files with PyInstaller (--onefile)](https://stackoverflow.com/questions/7674790/bundling-data-files-with-pyinstaller-onefile/13790741#13790741)
