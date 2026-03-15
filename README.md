@@ -171,3 +171,5 @@ PyInstaller main.spec
 - [SkillFactory - 6 способов конвертировать код на Python в exe-файл](https://blog.skillfactory.ru/kak-konvertirovat-kod-na-python-v-exe-fayl/)
 - [SkillFactory - Как превратить Python-скрипт в EXE: обзор инструментов и советы по выбору](https://skillbox.ru/media/code/kak-sdelat-exe-fajl-python/)
 - [YouTube - Конвертируем .py в .exe | PyInstaller](https://www.youtube.com/live/gmHIcqiCJ7Q)
+- [YouTube - Python в .EXE ► КАК?]([https://www.youtube.com/live/gmHIcqiCJ7Q](https://www.youtube.com/live/CgCJwDjm_Cw))
+
