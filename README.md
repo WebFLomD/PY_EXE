@@ -165,3 +165,9 @@ PyInstaller main.spec
 - [CyberForum.ru - Как "положить" изображения в EXE файл созданный с PyInstaller?](https://www.cyberforum.ru/python/thread2468049-page2.html)
 - [Stack Overflow - Add image to .spec file in Pyinstaller](https://stackoverflow.com/questions/9946760/add-image-to-spec-file-in-pyinstaller)
 - [Stack Overflow - Bundling data files with PyInstaller (--onefile)](https://stackoverflow.com/questions/7674790/bundling-data-files-with-pyinstaller-onefile/13790741#13790741)
+
+### Может быть будет полезно
+[Aaron Tan's Blog - Creating an executable with PyQt5, PyInstaller, and more](https://blog.aaronhktan.com/posts/2018/05/14/pyqt5-pyinstaller-executable)
+[SkillFactory - 6 способов конвертировать код на Python в exe-файл](https://blog.skillfactory.ru/kak-konvertirovat-kod-na-python-v-exe-fayl/)
+[SkillFactory - Как превратить Python-скрипт в EXE: обзор инструментов и советы по выбору](https://skillbox.ru/media/code/kak-sdelat-exe-fajl-python/)
+[YouTube - Конвертируем .py в .exe | PyInstaller](https://www.youtube.com/live/gmHIcqiCJ7Q)
